@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles/App.css';
+import Card from './components/Card';
+import Status from './components/Status';
+//Quizes//
+import { quizes } from './data/data';
+//Functionalities//
+import { useState } from 'react';
 
 function App() {
+
+  const[sesionQuizes,setSesionQuizes]=useState(quizes)
+  const[quizNumber,setQuizNumber]=useState(0)
+
+  const handleResponse = (data) =>{
+    setSesionQuizes([...sesionQuizes],sesionQuizes[quizNumber].questionStatus=true)
+    if(sesionQuizes[quizNumber].correctResponse===data){
+      setSesionQuizes([...sesionQuizes],sesionQuizes[quizNumber].responseStatus=true,sesionQuizes[quizNumber].questionStatus=true)
+    }
+    setQuizNumber(quizNumber+1)
+  }
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="conteiner__app">
+      {quizNumber <= sesionQuizes.length-1 ?
+      <Card data={sesionQuizes[quizNumber]} function={handleResponse} disable={false} number={quizNumber}/>
+      :
+      <Status results={sesionQuizes} number={quizNumber}/>}
     </div>
   );
 }
